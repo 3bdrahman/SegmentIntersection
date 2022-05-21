@@ -8,4 +8,4 @@
 ### problems 
 * the program finds the intersection of the lines the segments belong to and not the lines themselves.
 * if the two segments are parallel then there is no intersection which can cause the program to break. 
-![](gif1.gif)
+![] (gif1.gif)
