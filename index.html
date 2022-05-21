@@ -65,7 +65,10 @@
 
                 const I = getIntersection(A,B,C,D);
                 console.log(I)
-                drawPoint(I,"I");
+                if(I){
+                    drawPoint(I,"I");
+                }
+                
                 
                 // console.log(t);
                 requestAnimationFrame(animate);
@@ -73,6 +76,7 @@
             function getIntersection(A,B,C,D){
                 // if we have an intersection then 
                 /* 
+               ------------------ getting T-------------------
                 Ix= Ax+(Bx-Ax)t= Cx+(Dx-Cx)u
                 substract Cx from both sides
                 Ix = (Ax-Cx)+(Bx-Ax)t= (Dx-Cx)u
@@ -99,15 +103,39 @@
                 top = (Dx-Cx)(Ay-Cy)-(Dy-Cy)(Ax-Cx);
                 bottom = ((Dy-Cy)(Bx-Ax)-(Dx-Cx)(By-Ay))
                 t = top / bottom
-                */
-                const top = (D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
-                const bottom = ((D.y-C.y)*(B.x-A.x)-(D.x-C.x)*(B.y-A.y));
-                const t = top / bottom;
+                -------------------getting U -------------------
+                Ix=Ax+(Bx-Ax)t=Cx+(Dx-Cx)u
+                    subtract Ax from both sides
+                    (Bx-Ax)t = (Cx-Ax)+(Dx-Cx)u
 
-                return {
-                    x:lerp(A.x,B.x,t),
-                    y:lerp(A.y,B.y,t)
+                Iy=Ay+(By-Ay)t=Cy+(Dy-Cy)u
+                    subtract Ay from both sides
+                    (By-Ay)t = (Cy-Ay)+(Dy-Cy)u
+                    multiply both sides by (Bx-Ax)
+                    (By-Ay)(Bx-Ax)t=(Cy-Ay)(Bx-Ax)+(Dy-Cy)(Bx-Ax)u
+                    (By-Ay)(Cx-Ax)+(By-Ay)(Dx-Cx)u=(Cy-Ay)(Bx-Ax)+(Dy-Cy)(Bx-Ax)u
+                    (By-Ay)(Cx-Ax)-(Cy-Ay)(Bx-Ax)=(Dy-Cy)(Bx-Ax)u - (By-Ay)(Dx-Cx)u
+                    (By-Ay)(Cx-Ax)-(Cy-Ay)(Bx-Ax)=u((Dy-Cy)(Bx-Ax)-(By-Ay)(Dx-Cx))
+                    u =  (By-Ay)(Cx-Ax)-(Cy-Ay)(Bx-Ax) / ((Dy-Cy)(Bx-Ax)-(By-Ay)(Dx-Cx))
+                            ^uTop                            ^same bottom as T 
+
+                */
+                const uTop = (B.y-A.y)*(C.x-A.x)-(C.y-A.y)*(B.x-A.x);
+                const tTop = (D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
+                const bottom = ((D.y-C.y)*(B.x-A.x)-(D.x-C.x)*(B.y-A.y));
+                if(bottom !=0){
+                    const t = tTop / bottom;
+                    const u = uTop/bottom;
+                    if(t>=0 && t<=1&& u>=0 && u<=1){
+                        return {
+                         x:lerp(A.x,B.x,t),
+                         y:lerp(A.y,B.y,t)
+                    }
+                    }
                 }
+                
+                return null;
+                
             }
 
             function drawPoint(point,label,isOutOfSegment){
