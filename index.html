@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Segment Intersection</title>
+        <style>
+            body{
+                margin: 0px;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas"></canvas>
+        <script>
+            myCanvas.width=window.innerWidth;
+            myCanvas.height=window.innerHeight;
+
+            const A={x:200,y:150};
+            const B={x:150,y:250};
+            const C={x:50,y:100};
+            const D={x:250,y:200};
+            const mouse ={x:0, y:0};
+            document.onmousemove=(event)=>{
+                mouse.x=event.x;
+                mouse.y=event.y;
+            }
+            const context = myCanvas.getContext("2d");
+            let t =0; // interpolation factor
+            animate();
+
+            function animate(){
+                const radius=50;
+                A.x=mouse.x;
+                A.y=mouse.y-radius;
+                B.x=mouse.x;
+                B.y=mouse.y+radius;
+                context.clearRect(0,0,myCanvas.width,myCanvas.height);
+                  // drawing the lines
+                context.beginPath();
+                context.moveTo(A.x,A.y);
+                context.lineTo(B.x,B.y);
+                context.moveTo(C.x,C.y);
+                context.lineTo(D.x,D.y);
+                context.stroke();
+                // labelling & circling points
+            
+                drawPoint(A,"A");
+                drawPoint(B,"B");
+                drawPoint(C,"C");
+                drawPoint(D,"D");
+
+                // middle point of  A-B segment 
+                // const M={
+                //     x:lerp(A.x,B.x,t),
+                //     y:lerp(A.y,B.y,t)
+                // }
+                //  // middle point of  C-D segment 
+                //  const N={
+                //     x:lerp(C.x,D.x,t),
+                //     y:lerp(C.y,D.y,t)
+                // }
+                // drawPoint(M,"M", t <0 || t >1);
+                // drawPoint(N,"N", t <0 || t >1);
+
+                const I = getIntersection(A,B,C,D);
+                console.log(I)
+                drawPoint(I,"I");
+                
+                // console.log(t);
+                requestAnimationFrame(animate);
+                }
+            function getIntersection(A,B,C,D){
+                // if we have an intersection then 
+                /* 
+                Ix= Ax+(Bx-Ax)t= Cx+(Dx-Cx)u
+                substract Cx from both sides
+                Ix = (Ax-Cx)+(Bx-Ax)t= (Dx-Cx)u
+
+
+                Iy= Ay+(By-Ay)t=Cy+(Dy-Cy)u
+                    subtract Cy from both sides
+                Iy = (Ay-Cy)+(By-Ay)t= (Dy-Cy)u
+                    multiply both sides by (Dx-Cx) so we have a similar side like in Ix above
+                
+                Iy = (Dx-Cx)(Ay-Cy)+(Dx-Cx)(By-Ay)t=(Dy-Cy)(Dx-Cx)u
+                    replace (Dx-Cx)u with (Ax-Cx)+(Bx-Ax)t
+                    
+                Iy = (Dx-Cx)(Ay-Cy)+(Dx-Cx)(By-Ay)t=
+                (Dy-Cy)(Ax-Cx)+(Dy-Cy)(Bx-Ax)t
+
+                    subtract (Dy-Cy)(Ax-Cx) from both sides & substract (Dx-Cx)(By-Ay)t from both sides
+                Iy=(Dx-Cx)(Ay-Cy) - (Dy-Cy)(Ax-Cx) = (Dy-Cy)(Bx-Ax)t -(Dx-Cx)(By-Ay)t
+                    factor out the t
+                Iy = (Dx-Cx)(Ay-Cy)-(Dy-Cy)(Ax-Cx)=t((Dy-Cy)(Bx-Ax)-(Dx-Cx)(By-Ay))
+                t = (Dx-Cx)(Ay-Cy)-(Dy-Cy)(Ax-Cx) / ((Dy-Cy)(Bx-Ax)-(Dx-Cx)(By-Ay))
+                        ^ top                           ^bottom
+                
+                top = (Dx-Cx)(Ay-Cy)-(Dy-Cy)(Ax-Cx);
+                bottom = ((Dy-Cy)(Bx-Ax)-(Dx-Cx)(By-Ay))
+                t = top / bottom
+                */
+                const top = (D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
+                const bottom = ((D.y-C.y)*(B.x-A.x)-(D.x-C.x)*(B.y-A.y));
+                const t = top / bottom;
+
+                return {
+                    x:lerp(A.x,B.x,t),
+                    y:lerp(A.y,B.y,t)
+                }
+            }
+
+            function drawPoint(point,label,isOutOfSegment){
+                context.beginPath();
+                context.fillStyle=isOutOfSegment? "red": "white";
+                context.arc(point.x, point.y, 10,0, Math.PI*2);
+                context.fill();
+                context.stroke();
+                context.textAlign="center";
+                context.font="bold 12px"
+                context.textBaseline="middle"
+                context.fillStyle="black";
+                context.fillText(label,point.x,point.y);
+            }
+          
+            // linear interpolation
+            function lerp(A,B,t){
+                return A + (B-A) *t;
+            }
+        </script>
+    </body>
+</html>
