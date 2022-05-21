@@ -1,5 +1,5 @@
 # SegmentIntersectionVisualizer
-### given two segments in a canvas, we need to obtain the point where they intersect. 
+### given two segments in a canvas, we need to obtain the point where they intersect. To be used in the self-driving car project
 
 ## 1st milestone 
 1. draw the two segments ( A-B & C-D) on the canvas
