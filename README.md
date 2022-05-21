@@ -6,5 +6,5 @@
 2. Figure out where they intersect using linear interpolation 
 3. change the positions of A-B segment so that it keeps following the mouse. 
 ### problems 
---> the program finds the intersection of the lines the segments belong to and not the lines themselves.
---> if the two segments are parallel then there is no intersection which can cause the program to break. 
+* the program finds the intersection of the lines the segments belong to and not the lines themselves.
+* if the two segments are parallel then there is no intersection which can cause the program to break. 
