@@ -8,8 +8,11 @@
 ### problems 
 * the program finds the intersection of the lines the segments belong to and not the lines themselves.
 * if the two segments are parallel then there is no intersection which can cause the program to break. 
+
 ![](gif1.gif)
 
 ## final milestone
 1. make the A-B in continuous circular movement. 
 2. fix the C-D line extension problem by making sure that the linear interpolation factors of both A-B and C-D are between 0 and 1 
+
+![](gif2.gif)
